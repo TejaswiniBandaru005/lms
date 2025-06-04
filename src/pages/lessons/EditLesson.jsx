@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaUpload, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 import Card from '../../components/common/Card';
+import ReactPlayer from 'react-player';
 
 export default function EditLesson() {
   const { courseId, chapterId, lessonId } = useParams();
@@ -130,6 +131,16 @@ export default function EditLesson() {
 
         <Card title="Video Content">
           <div className="space-y-4">
+            {formData.videoUrl && (
+              <div className="aspect-w-16 aspect-h-9 mb-4">
+                <ReactPlayer
+                  url={formData.videoUrl}
+                  width="100%"
+                  height="400px"
+                  controls
+                />
+              </div>
+            )}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Video URL

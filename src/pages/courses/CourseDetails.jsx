@@ -108,7 +108,7 @@ export default function CourseDetails() {
                     <h2 className="text-xl font-semibold">Chapters</h2>
                     {isInstructor && (
                       <Link
-                        to={`/chapters/${id}/create`}
+                        to={`/courses/${id}/chapters/create`}
                         className="flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
                       >
                         <FaPlus className="mr-2" />
@@ -123,13 +123,13 @@ export default function CourseDetails() {
                         {isInstructor && (
                           <div className="flex space-x-2">
                             <Link
-                              to={`/chapters/${id}/${chapter.id}/edit`}
+                              to={`/courses/${id}/chapters/${chapter.id}/edit`}
                               className="text-primary hover:text-primary/90"
                             >
                               <FaEdit />
                             </Link>
                             <Link
-                              to={`/lessons/${id}/${chapter.id}/create`}
+                              to={`/courses/${id}/chapters/${chapter.id}/lessons/create`}
                               className="text-primary hover:text-primary/90"
                             >
                               <FaPlus />
@@ -143,7 +143,10 @@ export default function CourseDetails() {
                             key={lesson.id}
                             className="p-4 flex items-center justify-between hover:bg-gray-50"
                           >
-                            <div className="flex items-center">
+                            <Link 
+                              to={`/courses/${id}/chapters/${chapter.id}/lessons/${lesson.id}`}
+                              className="flex items-center flex-1"
+                            >
                               {lesson.type === 'video' ? (
                                 <FaPlay className="text-primary mr-3" />
                               ) : lesson.type === 'quiz' ? (
@@ -152,7 +155,7 @@ export default function CourseDetails() {
                                 <FaFile className="text-primary mr-3" />
                               )}
                               <span>{lesson.title}</span>
-                            </div>
+                            </Link>
                             <div className="flex items-center space-x-4">
                               {lesson.duration && (
                                 <span className="text-sm text-gray-500">
@@ -161,7 +164,7 @@ export default function CourseDetails() {
                               )}
                               {isInstructor && (
                                 <Link
-                                  to={`/lessons/${id}/${chapter.id}/${lesson.id}/edit`}
+                                  to={`/courses/${id}/chapters/${chapter.id}/lessons/${lesson.id}/edit`}
                                   className="text-primary hover:text-primary/90"
                                 >
                                   <FaEdit />
