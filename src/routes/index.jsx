@@ -59,7 +59,7 @@ const AppRoutes = () => {
           <Route index element={<CourseList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create" element={<CreateCourse />} />
+              <Route path="create\" element={<CreateCourse />} />
               <Route path=":id/edit" element={<EditCourse />} />
             </>
           )}
@@ -70,7 +70,7 @@ const AppRoutes = () => {
             <Route index element={<ChapterList />} />
             {user?.role === 'instructor' && (
               <>
-                <Route path="create" element={<CreateChapter />} />
+                <Route path="create\" element={<CreateChapter />} />
                 <Route path=":chapterId/edit" element={<EditChapter />} />
               </>
             )}
@@ -80,7 +80,7 @@ const AppRoutes = () => {
           <Route path=":courseId/chapters/:chapterId/lessons">
             {user?.role === 'instructor' && (
               <>
-                <Route path="create" element={<CreateLesson />} />
+                <Route path="create\" element={<CreateLesson />} />
                 <Route path=":lessonId/edit" element={<EditLesson />} />
               </>
             )}
@@ -92,7 +92,7 @@ const AppRoutes = () => {
           <Route index element={<QuizList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create" element={<CreateQuiz />} />
+              <Route path="create\" element={<CreateQuiz />} />
               <Route path=":id/edit" element={<EditQuiz />} />
             </>
           )}
@@ -104,7 +104,7 @@ const AppRoutes = () => {
           <Route index element={<AssessmentList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create" element={<CreateAssessment />} />
+              <Route path="create\" element={<CreateAssessment />} />
               <Route path=":id/submissions" element={<AssessmentSubmissions />} />
             </>
           )}
