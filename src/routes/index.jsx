@@ -64,33 +64,35 @@ const AppRoutes = () => {
             </>
           )}
           <Route path=":id" element={<CourseDetails />} />
-        </Route>
+          
+          {/* Chapter routes */}
+          <Route path=":courseId/chapters">
+            <Route index element={<ChapterList />} />
+            {user?.role === 'instructor' && (
+              <>
+                <Route path="create" element={<CreateChapter />} />
+                <Route path=":chapterId/edit" element={<EditChapter />} />
+              </>
+            )}
+          </Route>
 
-        <Route path="chapters/:courseId">
-          <Route index element={<ChapterList />} />
-          {user?.role === 'instructor' && (
-            <>
-              <Route path="create\" element={<CreateChapter />} />
-              <Route path=":chapterId/edit" element={<EditChapter />} />
-            </>
-          )}
-        </Route>
-
-        <Route path="lessons/:courseId/:chapterId">
-          {user?.role === 'instructor' && (
-            <>
-              <Route path="create\" element={<CreateLesson />} />
-              <Route path=":lessonId/edit" element={<EditLesson />} />
-            </>
-          )}
-          <Route path=":lessonId" element={<LessonPlayer />} />
+          {/* Lesson routes */}
+          <Route path=":courseId/chapters/:chapterId/lessons">
+            {user?.role === 'instructor' && (
+              <>
+                <Route path="create" element={<CreateLesson />} />
+                <Route path=":lessonId/edit" element={<EditLesson />} />
+              </>
+            )}
+            <Route path=":lessonId" element={<LessonPlayer />} />
+          </Route>
         </Route>
         
         <Route path="quiz">
           <Route index element={<QuizList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create\" element={<CreateQuiz />} />
+              <Route path="create" element={<CreateQuiz />} />
               <Route path=":id/edit" element={<EditQuiz />} />
             </>
           )}
@@ -102,7 +104,7 @@ const AppRoutes = () => {
           <Route index element={<AssessmentList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create\" element={<CreateAssessment />} />
+              <Route path="create" element={<CreateAssessment />} />
               <Route path=":id/submissions" element={<AssessmentSubmissions />} />
             </>
           )}
