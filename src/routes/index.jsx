@@ -6,8 +6,13 @@ import StudentDashboard from '../pages/dashboard/StudentDashboard';
 import CourseList from '../pages/courses/CourseList';
 import CourseDetails from '../pages/courses/CourseDetails';
 import CreateCourse from '../pages/courses/CreateCourse';
+import EditCourse from '../pages/courses/EditCourse';
 import ChapterList from '../pages/chapters/ChapterList';
+import CreateChapter from '../pages/chapters/CreateChapter';
+import EditChapter from '../pages/chapters/EditChapter';
 import LessonPlayer from '../pages/lessons/LessonPlayer';
+import CreateLesson from '../pages/lessons/CreateLesson';
+import EditLesson from '../pages/lessons/EditLesson';
 import QuizList from '../pages/quiz/QuizList';
 import CreateQuiz from '../pages/quiz/CreateQuiz';
 import EditQuiz from '../pages/quiz/EditQuiz';
@@ -15,6 +20,7 @@ import AttemptQuiz from '../pages/quiz/AttemptQuiz';
 import QuizResults from '../pages/quiz/QuizResults';
 import AssessmentList from '../pages/assessments/AssessmentList';
 import CreateAssessment from '../pages/assessments/CreateAssessment';
+import AssessmentSubmissions from '../pages/assessments/AssessmentSubmissions';
 import DiscussionForum from '../pages/discussions/DiscussionForum';
 import DoubtBox from '../pages/doubts/DoubtBox';
 import ProgrammingEnv from '../pages/programming/ProgrammingEnv';
@@ -50,13 +56,33 @@ const AppRoutes = () => {
         <Route path="courses">
           <Route index element={<CourseList />} />
           {user?.role === 'instructor' && (
-            <Route path="create" element={<CreateCourse />} />
+            <>
+              <Route path="create" element={<CreateCourse />} />
+              <Route path=":id/edit" element={<EditCourse />} />
+            </>
           )}
           <Route path=":id" element={<CourseDetails />} />
         </Route>
 
-        <Route path="chapters/:courseId" element={<ChapterList />} />
-        <Route path="lessons/:courseId/:lessonId" element={<LessonPlayer />} />
+        <Route path="chapters/:courseId">
+          <Route index element={<ChapterList />} />
+          {user?.role === 'instructor' && (
+            <>
+              <Route path="create" element={<CreateChapter />} />
+              <Route path=":chapterId/edit" element={<EditChapter />} />
+            </>
+          )}
+        </Route>
+
+        <Route path="lessons/:courseId/:chapterId">
+          {user?.role === 'instructor' && (
+            <>
+              <Route path="create" element={<CreateLesson />} />
+              <Route path=":lessonId/edit" element={<EditLesson />} />
+            </>
+          )}
+          <Route path=":lessonId" element={<LessonPlayer />} />
+        </Route>
         
         <Route path="quiz">
           <Route index element={<QuizList />} />
@@ -73,7 +99,10 @@ const AppRoutes = () => {
         <Route path="assessments">
           <Route index element={<AssessmentList />} />
           {user?.role === 'instructor' && (
-            <Route path="create" element={<CreateAssessment />} />
+            <>
+              <Route path="create" element={<CreateAssessment />} />
+              <Route path=":id/submissions" element={<AssessmentSubmissions />} />
+            </>
           )}
         </Route>
 

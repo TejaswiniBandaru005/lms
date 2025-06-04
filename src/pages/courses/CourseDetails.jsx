@@ -1,13 +1,16 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { FaPlay, FaFile, FaQuestionCircle, FaTasks } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { FaPlay, FaFile, FaQuestionCircle, FaTasks, FaEdit, FaPlus } from 'react-icons/fa';
 
 export default function CourseDetails() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+  const isInstructor = user?.role === 'instructor';
 
   // Mock course data
-  const course = {
+  const [course, setCourse] = useState({
     id,
     title: 'Complete Web Development Bootcamp',
     description: 'Learn web development from scratch to advanced level',
@@ -18,35 +21,50 @@ export default function CourseDetails() {
     rating: 4.5,
     chapters: [
       {
+        id: '1',
         title: 'Introduction to Web Development',
         lessons: [
-          { title: 'Welcome to the Course', duration: '10:00', type: 'video' },
-          { title: 'Setting Up Your Environment', duration: '15:00', type: 'video' },
+          { id: '1', title: 'Welcome to the Course', duration: '10:00', type: 'video' },
+          { id: '2', title: 'Setting Up Your Environment', duration: '15:00', type: 'video' },
         ]
       },
       {
+        id: '2',
         title: 'HTML Fundamentals',
         lessons: [
-          { title: 'Basic HTML Structure', duration: '20:00', type: 'video' },
-          { title: 'HTML Forms and Tables', duration: '25:00', type: 'video' },
-          { title: 'HTML Quiz', type: 'quiz' },
+          { id: '3', title: 'Basic HTML Structure', duration: '20:00', type: 'video' },
+          { id: '4', title: 'HTML Forms and Tables', duration: '25:00', type: 'video' },
+          { id: '5', title: 'HTML Quiz', type: 'quiz' },
         ]
       }
     ]
-  };
+  });
 
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
-        <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-          <span>By {course.instructor}</span>
-          <span>•</span>
-          <span>{course.duration}</span>
-          <span>•</span>
-          <span>{course.lessons} lessons</span>
-          <span>•</span>
-          <span>{course.enrolled} students</span>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
+            <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
+              <span>By {course.instructor}</span>
+              <span>•</span>
+              <span>{course.duration}</span>
+              <span>•</span>
+              <span>{course.lessons} lessons</span>
+              <span>•</span>
+              <span>{course.enrolled} students</span>
+            </div>
+          </div>
+          {isInstructor && (
+            <Link
+              to={`/courses/${id}/edit`}
+              className="flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+            >
+              <FaEdit className="mr-2" />
+              Edit Course
+            </Link>
+          )}
         </div>
       </div>
 
@@ -86,15 +104,43 @@ export default function CourseDetails() {
                 </div>
               ) : (
                 <div className="space-y-4">
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-semibold">Chapters</h2>
+                    {isInstructor && (
+                      <Link
+                        to={`/chapters/${id}/create`}
+                        className="flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+                      >
+                        <FaPlus className="mr-2" />
+                        Add Chapter
+                      </Link>
+                    )}
+                  </div>
                   {course.chapters.map((chapter, index) => (
-                    <div key={index} className="border rounded-lg">
-                      <div className="p-4 bg-gray-50 font-medium">
-                        {chapter.title}
+                    <div key={chapter.id} className="border rounded-lg">
+                      <div className="p-4 bg-gray-50 flex justify-between items-center">
+                        <h3 className="font-medium">{chapter.title}</h3>
+                        {isInstructor && (
+                          <div className="flex space-x-2">
+                            <Link
+                              to={`/chapters/${id}/${chapter.id}/edit`}
+                              className="text-primary hover:text-primary/90"
+                            >
+                              <FaEdit />
+                            </Link>
+                            <Link
+                              to={`/lessons/${id}/${chapter.id}/create`}
+                              className="text-primary hover:text-primary/90"
+                            >
+                              <FaPlus />
+                            </Link>
+                          </div>
+                        )}
                       </div>
                       <div className="divide-y">
-                        {chapter.lessons.map((lesson, lessonIndex) => (
+                        {chapter.lessons.map((lesson) => (
                           <div
-                            key={lessonIndex}
+                            key={lesson.id}
                             className="p-4 flex items-center justify-between hover:bg-gray-50"
                           >
                             <div className="flex items-center">
@@ -107,11 +153,21 @@ export default function CourseDetails() {
                               )}
                               <span>{lesson.title}</span>
                             </div>
-                            {lesson.duration && (
-                              <span className="text-sm text-gray-500">
-                                {lesson.duration}
-                              </span>
-                            )}
+                            <div className="flex items-center space-x-4">
+                              {lesson.duration && (
+                                <span className="text-sm text-gray-500">
+                                  {lesson.duration}
+                                </span>
+                              )}
+                              {isInstructor && (
+                                <Link
+                                  to={`/lessons/${id}/${chapter.id}/${lesson.id}/edit`}
+                                  className="text-primary hover:text-primary/90"
+                                >
+                                  <FaEdit />
+                                </Link>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
