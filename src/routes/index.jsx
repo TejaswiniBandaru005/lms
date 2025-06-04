@@ -59,7 +59,7 @@ const AppRoutes = () => {
           <Route index element={<CourseList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create\" element={<CreateCourse />} />
+              <Route path="create" element={<CreateCourse />} />
               <Route path=":id/edit" element={<EditCourse />} />
             </>
           )}
