@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { FaComment, FaUser, FaClock } from 'react-icons/fa';
@@ -13,19 +14,10 @@ export default function DiscussionForum() {
       content: 'Can someone explain how useEffect works?',
       author: 'John Doe',
       createdAt: '2025-03-15T10:00:00Z',
-      replies: [
-        {
-          id: '1',
-          content: 'useEffect runs after every render by default...',
-          author: 'Jane Smith',
-          createdAt: '2025-03-15T10:30:00Z'
-        }
-      ]
+      replies: 2
     }
   ]);
   const [newDiscussion, setNewDiscussion] = useState({ title: '', content: '' });
-  const [selectedDiscussion, setSelectedDiscussion] = useState(null);
-  const [reply, setReply] = useState('');
 
   const handleCreateDiscussion = (e) => {
     e.preventDefault();
@@ -34,29 +26,11 @@ export default function DiscussionForum() {
       ...newDiscussion,
       author: user.name,
       createdAt: new Date().toISOString(),
-      replies: []
+      replies: 0
     };
     setDiscussions(prev => [discussion, ...prev]);
     setNewDiscussion({ title: '', content: '' });
     toast.success('Discussion created successfully!');
-  };
-
-  const handleReply = (discussionId) => {
-    const newReply = {
-      id: Date.now().toString(),
-      content: reply,
-      author: user.name,
-      createdAt: new Date().toISOString()
-    };
-
-    setDiscussions(prev => prev.map(d => {
-      if (d.id === discussionId) {
-        return { ...d, replies: [...d.replies, newReply] };
-      }
-      return d;
-    }));
-    setReply('');
-    toast.success('Reply added successfully!');
   };
 
   return (
@@ -101,8 +75,12 @@ export default function DiscussionForum() {
 
       <div className="space-y-6">
         {discussions.map(discussion => (
-          <div key={discussion.id} className="bg-white rounded-lg shadow-md">
-            <div className="p-6 border-b">
+          <Link 
+            key={discussion.id} 
+            to={`/discussions/${discussion.id}`}
+            className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+          >
+            <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-xl font-semibold">{discussion.title}</h2>
                 <div className="flex items-center text-sm text-gray-500">
@@ -110,54 +88,18 @@ export default function DiscussionForum() {
                   {format(new Date(discussion.createdAt), 'MMM d, yyyy')}
                 </div>
               </div>
-              <p className="text-gray-700 mb-4">{discussion.content}</p>
-              <div className="flex items-center text-sm text-gray-500">
-                <FaUser className="mr-1" />
-                {discussion.author}
-              </div>
-            </div>
-
-            <div className="p-6 bg-gray-50">
-              <h3 className="font-medium mb-4">
-                Replies ({discussion.replies.length})
-              </h3>
-              <div className="space-y-4">
-                {discussion.replies.map(reply => (
-                  <div key={reply.id} className="bg-white p-4 rounded border">
-                    <p className="text-gray-700 mb-2">{reply.content}</p>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <FaUser className="mr-1" />
-                        {reply.author}
-                      </div>
-                      <div className="flex items-center">
-                        <FaClock className="mr-1" />
-                        {format(new Date(reply.createdAt), 'MMM d, yyyy')}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-4">
-                <textarea
-                  value={reply}
-                  onChange={(e) => setReply(e.target.value)}
-                  placeholder="Write a reply..."
-                  rows="3"
-                  className="w-full p-2 border rounded focus:ring-primary focus:border-primary"
-                />
-                <div className="flex justify-end mt-2">
-                  <button
-                    onClick={() => handleReply(discussion.id)}
-                    className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
-                  >
-                    Reply
-                  </button>
+              <div className="flex items-center justify-between text-sm text-gray-500">
+                <div className="flex items-center">
+                  <FaUser className="mr-1" />
+                  {discussion.author}
+                </div>
+                <div className="flex items-center">
+                  <FaComment className="mr-1" />
+                  {discussion.replies} replies
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

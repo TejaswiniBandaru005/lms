@@ -20,8 +20,10 @@ import AttemptQuiz from '../pages/quiz/AttemptQuiz';
 import QuizResults from '../pages/quiz/QuizResults';
 import AssessmentList from '../pages/assessments/AssessmentList';
 import CreateAssessment from '../pages/assessments/CreateAssessment';
+import SubmitAssessment from '../pages/assessments/SubmitAssessment';
 import AssessmentSubmissions from '../pages/assessments/AssessmentSubmissions';
 import DiscussionForum from '../pages/discussions/DiscussionForum';
+import DiscussionDetails from '../pages/discussions/DiscussionDetails';
 import DoubtBox from '../pages/doubts/DoubtBox';
 import ProgrammingEnv from '../pages/programming/ProgrammingEnv';
 import Profile from '../pages/profile/Profile';
@@ -57,7 +59,7 @@ const AppRoutes = () => {
           <Route index element={<CourseList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create\" element={<CreateCourse />} />
+              <Route path="create" element={<CreateCourse />} />
               <Route path=":id/edit" element={<EditCourse />} />
             </>
           )}
@@ -68,7 +70,7 @@ const AppRoutes = () => {
           <Route index element={<ChapterList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create\" element={<CreateChapter />} />
+              <Route path="create" element={<CreateChapter />} />
               <Route path=":chapterId/edit" element={<EditChapter />} />
             </>
           )}
@@ -77,7 +79,7 @@ const AppRoutes = () => {
         <Route path="lessons/:courseId/:chapterId">
           {user?.role === 'instructor' && (
             <>
-              <Route path="create\" element={<CreateLesson />} />
+              <Route path="create" element={<CreateLesson />} />
               <Route path=":lessonId/edit" element={<EditLesson />} />
             </>
           )}
@@ -88,7 +90,7 @@ const AppRoutes = () => {
           <Route index element={<QuizList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create\" element={<CreateQuiz />} />
+              <Route path="create" element={<CreateQuiz />} />
               <Route path=":id/edit" element={<EditQuiz />} />
             </>
           )}
@@ -100,13 +102,17 @@ const AppRoutes = () => {
           <Route index element={<AssessmentList />} />
           {user?.role === 'instructor' && (
             <>
-              <Route path="create\" element={<CreateAssessment />} />
+              <Route path="create" element={<CreateAssessment />} />
               <Route path=":id/submissions" element={<AssessmentSubmissions />} />
             </>
           )}
+          <Route path=":id/submit" element={<SubmitAssessment />} />
         </Route>
 
-        <Route path="discussions" element={<DiscussionForum />} />
+        <Route path="discussions">
+          <Route index element={<DiscussionForum />} />
+          <Route path=":id" element={<DiscussionDetails />} />
+        </Route>
         <Route path="doubts" element={<DoubtBox />} />
         <Route path="programming" element={<ProgrammingEnv />} />
         <Route path="profile" element={<Profile />} />

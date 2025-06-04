@@ -1,18 +1,17 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import ReactPlayer from 'react-player';
 import { FaList, FaQuestion } from 'react-icons/fa';
 
 export default function LessonPlayer() {
   const { courseId, lessonId } = useParams();
   const [showAskDoubtModal, setShowAskDoubtModal] = useState(false);
   const [doubt, setDoubt] = useState('');
+  const videoRef = useRef(null);
 
   // Mock lesson data
   const lesson = {
     id: lessonId,
     title: 'Introduction to React Hooks',
-    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     description: 'Learn about React Hooks and their usage in modern React applications.',
     resources: [
       { id: '1', title: 'Hooks Documentation', type: 'pdf' },
@@ -35,31 +34,58 @@ export default function LessonPlayer() {
     setDoubt('');
   };
 
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const videoURL = URL.createObjectURL(file);
+      if (videoRef.current) {
+        videoRef.current.src = videoURL;
+      }
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-md">
-            <div className="aspect-w-16 aspect-h-9">
-              <ReactPlayer
-                url={lesson.videoUrl}
-                width="100%"
-                height="100%"
+            <div className="aspect-w-16 aspect-h-9 bg-black">
+              <video
+                ref={videoRef}
+                className="w-full h-full"
                 controls
-                className="rounded-t-lg"
-              />
+                controlsList="nodownload"
+              >
+                <source type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
             
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">{lesson.title}</h1>
-                <button
-                  onClick={() => setShowAskDoubtModal(true)}
-                  className="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
-                >
-                  <FaQuestion className="mr-2" />
-                  Ask Doubt
-                </button>
+                <div className="flex space-x-4">
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    id="video-upload"
+                  />
+                  <label
+                    htmlFor="video-upload"
+                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 cursor-pointer"
+                  >
+                    Upload Video
+                  </label>
+                  <button
+                    onClick={() => setShowAskDoubtModal(true)}
+                    className="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+                  >
+                    <FaQuestion className="mr-2" />
+                    Ask Doubt
+                  </button>
+                </div>
               </div>
 
               <p className="text-gray-600 mb-6">{lesson.description}</p>
